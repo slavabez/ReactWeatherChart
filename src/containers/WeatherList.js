@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import Chart from '../components/Chart';
+import Map from '../components/Map';
 
 class WeatherList extends Component {
 
@@ -13,21 +14,31 @@ class WeatherList extends Component {
     renderWeather(cityData) {
         const name = cityData.city.name;
         const temps = cityData.list.map(
-            weather => weather.main.temp
+            weather => weather.main.temp - 273
+        );
+        const pressures = cityData.list.map(
+            weather => weather.main.pressure
+        );
+        const humidities = cityData.list.map(
+            weather => weather.main.humidity
         );
 
-        console.log('This is the name', name);
-
-        console.log('These are the temps', temps);
+        const { lon, lat } = cityData.city.coord;
 
 
         return (
             <tr key={name}>
-                <td>{name}</td>
                 <td>
-
-                    <Chart data={temps} colour='orange' />
-
+                    <Map lon={lon} lat={lat} />
+                </td>
+                <td>
+                    <Chart data={temps} colour='orange' units="C"/>
+                </td>
+                <td>
+                    <Chart data={pressures} colour='blue' units="hPa"/>
+                </td>
+                <td>
+                    <Chart data={humidities} colour='black' units="%"/>
                 </td>
             </tr>
         );
